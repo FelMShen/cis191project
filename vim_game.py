@@ -102,10 +102,55 @@ class Grid():
     def x_command(self):
         i = self.x
         j = self.y
-        while (j < 19):
+        while (j < GRID_WIDTH - 1):
             self.cells[i][j].c = self.cells[i][j+1].c
             j += 1
         self.cells[i][j].c = '`'
+
+    # dd to delete row
+    def dd_command(self, screen):
+        i = self.x
+        j = self.y
+        while (i < GRID_HEIGHT - 1):
+            for j in range(GRID_WIDTH):
+                self.cells[i][j].c = self.cells[i+1][j].c
+            i += 1
+        #i = grid_height so we set all of these to the placeholder char
+        for j in range(GRID_WIDTH):
+            self.cells[i][j].c = '`'
+
+        '''#now we have to move the cursor up if we delete the bottom row
+        hasValues = False
+        for j in range(GRID_WIDTH):
+            if (self.cells[i][j].c != '`'):
+                print(self.cells[i][j].c)
+                hasValues = True
+        print(hasValues)
+        if not (hasValues):
+            #we can't move the cursor less than 0
+            if (i == 0):
+                self.select(self.x, 0, screen)
+            #we move the cursor up once
+            else:
+                self.select(self.x - 1, 0, screen)'''
+
+
+    # dw to delete word
+    #deletes all of the word from the cursor onward
+    def dw_command(self, screen):
+        i = self.x
+        j = self.y
+        index = j
+        while (self.cells[i][index].c != ' ' and self.cells[i][index].c != '`'):
+            for j_i in range(j, GRID_WIDTH - 1):
+                self.cells[i][j_i].c = self.cells[i][j_i+1].c
+
+        if (self.cells[i][j].c == ' '):
+            for j_i in range(j, GRID_WIDTH - 1):
+                self.cells[i][j_i].c = self.cells[i][j_i+1].c
+        #i = grid_height so we set all of these to the placeholder char
+
+
 
 # the main game engine is here. Will have to restructure a bit
 
@@ -114,7 +159,7 @@ pygame.init()
 # Select the font to use, size, bold, italics
 font = pygame.font.SysFont('Calibri', 18, False, False)
 
-
+#dimensions of each letter cell
 CELL_WIDTH = 30
 CELL_HEIGHT = 30
 
@@ -145,22 +190,22 @@ clicked = True
 #set screen to black
 screen.fill(WHITE)
 
-#selected letter
-
 #inits the grid
 g = Grid()
-level = open('level1.txt',"r").read()
-solution = open('level1_solution.txt',"r").read()
+level = open('level3.txt',"r").read()
+solution = open('level3_solution.txt',"r").read()
 g.import_level(level, solution)
+
+
+#command state for multi-letter commands
+#as of now, only dd is implemented
+state = ""
 
 #game engine
 while not done:
-
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-
 
         elif event.type == pygame.KEYDOWN:
             #allows hjkl navigation of selected tile (with bumpers)
@@ -193,14 +238,40 @@ while not done:
                     y = GRID_HEIGHT - 1
                 g.select(y, coords[1], screen)
 
+
+            #x command to delete cursored charcter
             elif event.key == pygame.K_x:
                 g.x_command()
+
+            #for the second d once state has been created as 'd'
+            elif state == 'd':
+                #if dd was pressed
+                if event.key == pygame.K_d:
+                    g.dd_command(screen)
+
+                #if dw was pressed
+                if event.key == pygame.K_w:
+                    g.dw_command(screen)
+
+                #something else was pressed or command finishes sucessfully
+                state = ''
+
+
+            #dd command to delete row , updates
+            elif event.key == pygame.K_d:
+                state = 'd'
+
+
+
+
             #just a random character to check a solution
             elif event.key == pygame.K_s:
                 if (g.check_solution()):
                     print("yeet")
                 else:
                     print("neet")
+
+
             #show the updated screen
             g.show(screen)
         elif event.type == pygame.MOUSEBUTTONDOWN:
