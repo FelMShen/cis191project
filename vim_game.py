@@ -64,21 +64,19 @@ class Grid():
     #note that the grid coordinates are 90 degrees off
     #takes two strings to be the level and the solution
     def import_level(self, level, solution):
+        #resets board
+        self.cells = [[Cell(x,y) for x in range(GRID_WIDTH)] for y in range(GRID_HEIGHT)]
         self.level = level
         self.solution = solution
-
         #loads the string into the grid
         y = 0
         x = 0
-
         for c in level:
             if (c == '\n'):
                 y = 0
                 x += 1
                 continue
-
             self.cells[x][y].update_letter(c)
-
             if (y == 19):
                 y = 0
                 x += 1
@@ -269,7 +267,7 @@ CELL_HEIGHT = 50
 BLACK = [0, 0, 0]
 WHITE = [255, 255, 255]
 GREEN = [0, 255, 0]
-BLUE = [0, 0, 255]
+BLUE = [0, 0, 50]
 RED = [255, 0, 0]
 
 # Set the height and width of the screen
@@ -369,7 +367,7 @@ while not done:
               button.draw(intro_background)
 
             screen.blit(intro_background, (0,0))
-        
+
         if loading_screen:
             title = titleFont.render("Completed Level " + str(curr_level - 1) + "!", True, (0, 200, 0))
             subtitle = subtitleFont.render("Click anywhere to begin next level!", True, (26,134,230))
