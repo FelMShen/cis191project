@@ -249,7 +249,7 @@ class TextBox():
 #initialize the engine
 pygame.init()
 # Select the font to use, size, bold, italics
-font = pygame.font.SysFont('Calibri', 18, False, False)
+font = pygame.font.SysFont('Calibri', 22, False, False)
 titleFont = pygame.font.SysFont('sfprodisplayregularotf', 40)
 subtitleFont = pygame.font.SysFont('sfprodiplayregularotf', 20)
 
@@ -502,7 +502,7 @@ while not done:
 
 
                 #just a random character to check a solution
-                elif event.key == pygame.K_s:
+                elif event.key == pygame.K_z:
                     if (g.check_solution()):
                         if (curr_level == 3):
                             final_screen = True
@@ -516,7 +516,6 @@ while not done:
                             g.import_level(level2, solution2)
                         elif curr_level == 3:
                             g.import_level(level3, solution3)
-                        print("neet")
 
 
                 #show the updated screen
