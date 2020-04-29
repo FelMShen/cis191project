@@ -120,21 +120,6 @@ class Grid():
         for j in range(GRID_WIDTH):
             self.cells[i][j].c = '`'
 
-        '''#now we have to move the cursor up if we delete the bottom row
-        hasValues = False
-        for j in range(GRID_WIDTH):
-            if (self.cells[i][j].c != '`'):
-                print(self.cells[i][j].c)
-                hasValues = True
-        print(hasValues)
-        if not (hasValues):
-            #we can't move the cursor less than 0
-            if (i == 0):
-                self.select(self.x, 0, screen)
-            #we move the cursor up once
-            else:
-                self.select(self.x - 1, 0, screen)'''
-
     # dw to delete word
     #deletes all of the word from the cursor onward
     def dw_command(self, screen):
